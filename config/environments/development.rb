@@ -75,4 +75,10 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.logger = Logger.new('log/development.log', 'daily')
+
+  # Don't care if the mailer can't send.
+  config.action_mailer.raise_delivery_errors = false
+  # 以下二行を追記
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025}
 end
