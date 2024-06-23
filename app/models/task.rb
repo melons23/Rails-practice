@@ -6,11 +6,25 @@ class Task < ApplicationRecord
 
   belongs_to :user
   has_one_attached :image
-  
+
   scope :recent, -> { order(created_at: :desc) }
   
   def self.ransackable_attributes(auth_object = nil)
     %w[name created_at]
+  end
+
+  def self.csv_attributes
+    ["name", "description", "created_at", "updated_at"]
+  end
+
+  def self.generate_csv
+    bom = "\uFEFF"
+    CSV.generate(bom) do |csv|
+      csv << csv_attributes
+      all.each do |task|
+        csv << csv_attributes.map{|attr| task.send(attr)} 
+      end
+    end
   end
 
   private 
